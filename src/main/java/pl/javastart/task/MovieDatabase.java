@@ -9,7 +9,7 @@ public class MovieDatabase {
 
     Movie[] movies = new Movie[MAX_MOVIES];
 
-    void add(Movie movie) {
+    private void add(Movie movie) {
         if (movieCounter < MAX_MOVIES) {
             movies[movieCounter] = movie;
             movieCounter++;
@@ -18,35 +18,46 @@ public class MovieDatabase {
         }
     }
 
-    Movie movieCreator() {
+    private Movie readMovie() {
         Movie movie = new Movie();
         System.out.println("Podaj tytuł:");
         movie.setName(scan.nextLine());
         System.out.println("Podaj rocznik:");
         movie.setYear(scan.nextInt());
         scan.nextLine();
-        do {
-            Movie movie1 = new Movie();
-            System.out.println("Podaj tytuł:");
-            movie1.setName(scan.nextLine());
-            System.out.println("Podaj rocznik:");
-            movie1.setYear(scan.nextInt());
-            scan.nextLine();
-            if (movie.equals(movie1)) {
-                break;
-            }
-            movie = movie1;
-        } while (true);
-        System.out.println("Duplikat");
         return movie;
     }
 
-    //Chyba tak nie mogę?
+    void run() {
+        System.out.println("Podaj informację o trzech unikalnych filmach");
+        while (movieCounter < MAX_MOVIES) {
+            Movie movie = readMovie();
+
+            boolean exists = checkIfMovieAlreadyExists(movie);
+
+            if (!exists) {
+                add(movie);
+            } else {
+                System.out.println("Duplikat");
+            }
+        }
+    }
+
+    private boolean checkIfMovieAlreadyExists(Movie movie) {
+        for (Movie movieCheck : movies) {
+            if (movie.equals(movieCheck)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
+        StringBuilder result = new StringBuilder();
         for (Movie movie : movies) {
-            return "Film: " + movie.getName() + ", rocznik: " + movie.getYear();
+            result.append("\nFilm: ").append(movie.getName()).append(", rocznik: ").append(movie.getYear());
         }
-        return "";
+        return result.toString();
     }
 }
